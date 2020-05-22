@@ -41,9 +41,9 @@ wage107_url$大職業別<-gsub("-"," ",wage107_url$大職業別)
 ```{r male}
 #這是R Code Chunk
 wage104_url$`經常性薪資-女/男`<-gsub("…"," ",wage104_url$`經常性薪資-女/男`)
-wage104_url$`經常性薪資-女/男`<-as.numeric(wage104_url$`經常性薪資-女/男`)      #整理104年經常性薪資-女/男的資料
+wage104_url$`經常性薪資-女/男`<-as.numeric(wage104_url$`經常性薪資-女/男`)      #將104年經常性薪資-女/男的資料轉乘numeric
 wage107_url$`經常性薪資-女/男`<-gsub("…|—"," ",wage107_url$`經常性薪資-女/男`)
-wage107_url$`經常性薪資-女/男`<-as.numeric(wage107_url$`經常性薪資-女/男`)      #整理107年經常性薪資-女/男的資料
+wage107_url$`經常性薪資-女/男`<-as.numeric(wage107_url$`經常性薪資-女/男`)      #將107年經常性薪資-女/男的資料轉乘numeric
 
 manwage_104<-filter(wage104_url,wage104_url$`經常性薪資-女/男`<100)
 head(manwage_104[order(manwage_104$`經常性薪資-女/男`,decreasing = T),],10)   #取104年男生薪資比女生多的職業前十名
