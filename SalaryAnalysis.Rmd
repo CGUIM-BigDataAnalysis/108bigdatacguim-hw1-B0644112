@@ -40,26 +40,44 @@ wage107_url$大職業別<-gsub("-"," ",wage107_url$大職業別)
 ### 104和107年度的大學畢業薪資資料，哪些行業男生薪資比女生薪資多?
 ```{r male}
 #這是R Code Chunk
+wage104_url$`經常性薪資-女/男`<-gsub("…"," ",wage104_url$`經常性薪資-女/男`)
+wage104_url$`經常性薪資-女/男`<-as.numeric(wage104_url$`經常性薪資-女/男`)      #整理104年經常性薪資-女/男的資料
+wage107_url$`經常性薪資-女/男`<-gsub("…|—"," ",wage107_url$`經常性薪資-女/男`)
+wage107_url$`經常性薪資-女/男`<-as.numeric(wage107_url$`經常性薪資-女/男`)      #整理107年經常性薪資-女/男的資料
+
+manwage_104<-filter(wage104_url,wage104_url$`經常性薪資-女/男`<100)
+head(manwage_104[order(manwage_104$`經常性薪資-女/男`,decreasing = T),],10)   #取104年男生薪資比女生多的職業前十名
+
+manwage_107<-filter(wage107_url,wage107_url$`經常性薪資-女/男`<100)
+head(manwage_107[order(manwage_107$`經常性薪資-女/男`,decreasing = T),],10)   #取107年男生薪資比女生多的職業前十名
+
 ```
 ### 哪些行業女生薪資比男生薪資多? 
 ```{r female}
 #這是R Code Chunk
+womanwage_104<-filter(wage104_url,wage104_url$`經常性薪資-女/男`>=100)
+head(womanwage_104[order(womanwage_104$`經常性薪資-女/男`,decreasing = T),],10)   #取104年女生金資比男生多的職業前十名
+
+womanwage_107<-filter(wage107_url,wage107_url$`經常性薪資-女/男`>=100)
+head(womanwage_107[order(womanwage_107$`經常性薪資-女/男`,decreasing = T),],10)   #取107年女生金資比男生多的職業前十名
+
 ```
 
 ## 研究所薪資差異
 
 
 ```{r grad}
-#這是R以107年度的資料來看，哪個職業別念研究所最划算呢 (研究所學歷薪資與大學學歷薪資增加比例最多)?
- wage107_url[,c("大職業別","大學-薪資","研究所-薪資")]  #選取大學跟研究所薪資
+#這是R Code Chunk
+以107年度的資料來看，哪個職業別念研究所最划算呢 (研究所學歷薪資與大學學歷薪資增加比例最多)?
 
+ wage107_url[,c("大職業別","大學-薪資","研究所-薪資")]  #選取大學跟研究所薪資
 
 wage_107$`大學-薪資`<-gsub("—|…"," ",wage_107$`大學-薪資`)
 wage_107$`研究所-薪資`<-gsub("—|…"," ",wage_107$`研究所-薪資`)   #計算研究所薪資 / 大學薪資到wage_add欄位
 wage_107$wage_add<-as.numeric(wage_107$`研究所-薪資`)/
                    as.numeric(wage_107$`大學-薪資`)  
   
-head(wage_107[order(wage_107$wage_add,decreasing = T),],10)   #薪資差異比例前十名名的資料 Code Chunk
+head(wage_107[order(wage_107$wage_add,decreasing = T),],10)   #薪資差異比例前十名名的資料
 ```
 大職業別                                    `大學-薪資` `研究所-薪資` wage_add
    <chr>                                       <chr>       <chr>            <dbl>
