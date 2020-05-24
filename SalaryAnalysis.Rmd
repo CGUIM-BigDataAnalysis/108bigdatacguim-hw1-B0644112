@@ -40,34 +40,37 @@ library(dplyr)
 ```{r male}
 #這是R Code Chunk
 
-#將104年經常性薪資-女/男的資料轉乘numeric
-wage104_url$`經常性薪資-女/男`<-gsub("…"," ",wage104_url$`經常性薪資-女/男`)
-wage104_url$`經常性薪資-女/男`<-as.numeric(wage104_url$`經常性薪資-女/男`)  
+#將104年大學-女/男的資料轉乘numeric
+wage104_url$`大學-女/男`<-gsub("—|…"," ",wage104_url$`大學-女/男`)
+wage104_url$`大學-女/男`<-as.numeric(wage104_url$`大學-女/男`)
 
- #將107年經常性薪資-女/男的資料轉乘numeric
-wage107_url$`經常性薪資-女/男`<-gsub("…|—"," ",wage107_url$`經常性薪資-女/男`)
-wage107_url$`經常性薪資-女/男`<-as.numeric(wage107_url$`經常性薪資-女/男`)     
+#將107年大學-女/男的資料轉乘numeric
+wage107_url$`大學-女/男`<-gsub("—|…"," ",wage107_url$`大學-女/男`)
+wage107_url$`大學-女/男`<-as.numeric(wage107_url$`大學-女/男`)
 
-#取104年男生薪資比女生多的職業前十名
-manwage_104<-filter(wage104_url,wage104_url$`經常性薪資-女/男`<100)
-head(manwage_104[order(manwage_104$`經常性薪資-女/男`,decreasing = T),],10)  
+#將104,107年大學-女/男的資料做成表格
+wage_rate_104<-wage104_url[,c("年度","大職業別","大學-女/男")]
+wage_rate_107<-wage107_url[,c("年度","大職業別","大學-女/男")]
 
-#取107年男生薪資比女生多的職業前十名
-manwage_107<-filter(wage107_url,wage107_url$`經常性薪資-女/男`<100)
-head(manwage_107[order(manwage_107$`經常性薪資-女/男`,decreasing = T),],10)   
+#取104男生薪資比女生薪資多的職業前十名
+manwage_104<-filter(wage_rate_104,wage_rate_104$`大學-女/男`<100)
+head(manwage_104[order(manwage_104$`大學-女/男`,decreasing = T),],10)
+
+#取107男生薪資比女生薪資多的職業前十名
+manwage_107<-filter(wage_rate_107,wage_rate_107$`大學-女/男`<100)
+head(manwage_107[order(manwage_107$`大學-女/男`,decreasing = T),],10)
 
 ```
 ### 哪些行業女生薪資比男生薪資多? 
 ```{r female}
 #這是R Code Chunk
 #取104年女生金資比男生多的職業前十名
-womanwage_104<-filter(wage104_url,wage104_url$`經常性薪資-女/男`>=100)
-head(womanwage_104[order(womanwage_104$`經常性薪資-女/男`,decreasing = T),],10)   
+womanwage_104<-filter(wage_rate_104,wage_rate_104$`大學-女/男`>=100)
+head(womanwage_104[order(womanwage_104$`大學-女/男`,decreasing = T),],10)
 
 #取107年女生金資比男生多的職業前十名
-womanwage_107<-filter(wage107_url,wage107_url$`經常性薪資-女/男`>=100)
-head(womanwage_107[order(womanwage_107$`經常性薪資-女/男`,decreasing = T),],10)   
-
+womanwage_107<-filter(wage_rate_107,wage_rate_107$`大學-女/男`>=100)
+head(womanwage_107[order(womanwage_107$`大學-女/男`,decreasing = T),],10)
 ```
 
 ## 研究所薪資差異
