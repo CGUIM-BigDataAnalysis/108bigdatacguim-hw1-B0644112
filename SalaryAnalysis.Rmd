@@ -113,6 +113,9 @@ head(wage107_url[order(wage107_url$wage_add,decreasing = T),],10)
 ### 有興趣的職業別篩選，呈現薪資
 ```{r like}
 #這是R Code Chunk
+
+favorite_job<-wage_table[c(65,66,86,87,89),c(1:2,11:15,24:28)]
+
 ```
 
 ### 這些職業別研究所薪資與大學薪資差多少呢？
