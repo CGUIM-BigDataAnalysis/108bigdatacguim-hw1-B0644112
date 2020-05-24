@@ -15,23 +15,38 @@ wage104_url<-read_csv("http://ipgod.nchc.org.tw/dataset/b6f36b72-0c4a-4b60-9254-
 wage107_url<-read_csv("C:/Users/m0470/OneDrive/桌面/107wages.csv")
 library(dplyr)
 
+#Join 104和107年度表格
+wage_table<-left_join(wage104_url,wage107_url,by="大職業別")
+
+#將104,107年大學-薪資轉成numeric
+wage_table$`大學-薪資.x`<-gsub("—|…"," ",wage_table$`大學-薪資.x`)
+wage_table$`大學-薪資.x`<-as.numeric(wage_table$`大學-薪資.x`)
+
+wage_table$`大學-薪資.y`<-gsub("—|…"," ",wage_table$`大學-薪資.y`)
+wage_table$`大學-薪資.y`<-as.numeric(wage_table$`大學-薪資.y`)
+
+#將104,107年大學-女/男的資料轉乘numeric
+wage_table$`大學-女/男.x`<-gsub("—|…"," ",wage_table$`大學-女/男.x`)
+wage_table$`大學-女/男.x`<-as.numeric(wage_table$`大學-女/男.x`)
+
+wage_table$`大學-女/男.y`<-gsub("—|…"," ",wage_table$`大學-女/男.y`)
+wage_table$`大學-女/男.y`<-as.numeric(wage_table$`大學-女/男.y`)
+
+#將104,107年研究所-薪資轉呈numeric
+wage_table$`研究所及以上-薪資`<-gsub("—|…"," ",wage_table$`研究所及以上-薪資`)
+wage_table$`研究所及以上-薪資`<-as.numeric(wage_table$`研究所及以上-薪資`)
+
+wage_table$`研究所-薪資`<-gsub("—|…"," ",wage_table$`研究所-薪資`)
+wage_table$`研究所-薪資`<-as.numeric(wage_table$`研究所-薪資`)
+
 ```
 
 ### 107年度薪資較104年度薪資高的職業有哪些? 
 ```{r compare103106}
 #這是R Code Chunk
 
-#將104,107年大學-薪資轉成numeric
-wage104_url$`大學-薪資`<-gsub("—|…"," ",wage104_url$`大學-薪資`)
-wage107_url$`大學-薪資`<-gsub("—|…"," ",wage107_url$`大學-薪資`)
-wage104_url$`大學-薪資`<-as.numeric(wage104_url$`大學-薪資`)
-wage107_url$`大學-薪資`<-as.numeric(wage107_url$`大學-薪資`)
-
-#Join 104和107年度表格
-wage_table<-left_join(wage104_url,wage107_url,by="大職業別")
-
 #計算107,104薪資提高比率並新增到欄位'大學薪資成長'
-wage_table$大學薪資成長<-wage107_url$`大學-薪資`/wage104_url$`大學-薪資`
+wage_table$大學薪資成長<-wage_table$`大學-薪資.y`/wage_table$`大學-薪資.x`
 
 #107年度薪資較104年度薪資高的職業取前十名
 wage_107over104<-filter(wage_table,wage_table$大學薪資成長>1)
@@ -57,15 +72,6 @@ wage_add_over5<-filter(wage_table,wage_table$大學薪資成長>1.05)
 ### 104和107年度的大學畢業薪資資料，哪些行業男生薪資比女生薪資多?
 ```{r male}
 #這是R Code Chunk
-
-#將104年大學-女/男的資料轉乘numeric
-wage104_url$`大學-女/男`<-gsub("—|…"," ",wage104_url$`大學-女/男`)
-wage104_url$`大學-女/男`<-as.numeric(wage104_url$`大學-女/男`)
-
-#將107年大學-女/男的資料轉乘numeric
-wage107_url$`大學-女/男`<-gsub("—|…"," ",wage107_url$`大學-女/男`)
-wage107_url$`大學-女/男`<-as.numeric(wage107_url$`大學-女/男`)
-
 #將104,107年大學-女/男的資料做成表格
 wage_rate_104<-wage104_url[,c("年度","大職業別","大學-女/男")]
 wage_rate_107<-wage107_url[,c("年度","大職業別","大學-女/男")]
@@ -73,6 +79,7 @@ wage_rate_107<-wage107_url[,c("年度","大職業別","大學-女/男")]
 #取104男生薪資比女生薪資多的職業前十名
 manwage_104<-filter(wage_rate_104,wage_rate_104$`大學-女/男`<100)
 head(manwage_104[order(manwage_104$`大學-女/男`,decreasing = T),],10)
+
 
 #取107男生薪資比女生薪資多的職業前十名
 manwage_107<-filter(wage_rate_107,wage_rate_107$`大學-女/男`<100)
@@ -98,14 +105,11 @@ head(womanwage_107[order(womanwage_107$`大學-女/男`,decreasing = T),],10)
 #這是R Code Chunk
 以107年度的資料來看，哪個職業別念研究所最划算呢 (研究所學歷薪資與大學學歷薪資增加比例最多)?
 
-#計算研究所薪資 / 大學薪資到wage_add欄位
-wage107_url$`大學-薪資`<-gsub("—|…"," ",wage107_url$`大學-薪資`)
-wage107_url$`研究所-薪資`<-gsub("—|…"," ",wage107_url$`研究所-薪資`)   
-wage107_url$wage_add<-as.numeric(wage107_url$`研究所-薪資`)/
-                      as.numeric(wage107_url$`大學-薪資`)  
+#計算研究所薪資 / 大學薪資到'大學研究所薪資成長'欄位
+wage_table$大學研究所薪資成長<-wage_table$`研究所-薪資`/wage_table$`大學-薪資.y`
 
 #薪資差異比例前十名名的資料
-head(wage107_url[order(wage107_url$wage_add,decreasing = T),],10)
+head(wage_table[order(wage_table$大學研究所薪資成長,decreasing = T),],10)  
 ```
 
 ## 我有興趣的職業別薪資狀況分析
@@ -121,11 +125,11 @@ favorite_job<-wage_table[c(65,66,86,87,89),c(1:2,11:15,24:28)]
 ### 這些職業別研究所薪資與大學薪資差多少呢？
 ```{r likeGrad}
 #這是R Code Chunk
-favorite_job$`研究所及以上-薪資`<-gsub("—"," ",favorite_job$`研究所及以上-薪資`)
+#104年大學-研究所薪資差
+favorite_job$wage_gap104<-favorite_job$`研究所及以上-薪資`-favorite_job$`大學-薪資.x`
 
-favorite_job$wage_gap104<-as.numeric(favorite_job$`研究所及以上-薪資`)-
-                          as.numeric(favorite_job$`大學-薪資.x`)
-favorite_job$wage_gap107<-as.numeric(favorite_job$`研究所-薪資`)-
-                          as.numeric(favorite_job$`大學-薪資.y`)
+#107年大學-研究所薪資差
+favorite_job$wage_gap107<-favorite_job$`研究所-薪資`-favorite_job$`大學-薪資.y`
+
 ```
 
