@@ -20,11 +20,29 @@ library(dplyr)
 ### 107年度薪資較104年度薪資高的職業有哪些? 
 ```{r compare103106}
 #這是R Code Chunk
+
+#將104,107年大學-薪資轉成numeric
+wage104_url$`大學-薪資`<-gsub("—|…"," ",wage104_url$`大學-薪資`)
+wage107_url$`大學-薪資`<-gsub("—|…"," ",wage107_url$`大學-薪資`)
+wage104_url$`大學-薪資`<-as.numeric(wage104_url$`大學-薪資`)
+wage107_url$`大學-薪資`<-as.numeric(wage107_url$`大學-薪資`)
+
+#Join 104和107年度表格
+wage_table<-left_join(wage104_url,wage107_url,by="大職業別")
+
+#計算107,104薪資提高比率並新增到欄位'大學薪資成長'
+wage_table$大學薪資成長<-wage107_url$`大學-薪資`/wage104_url$`大學-薪資`
+
+#107年度薪資較104年度薪資高的職業取前十名
+wage_107over104<-filter(wage_table,wage_table$大學薪資成長>1)
+head(wage_107over104[order(wage_107over104$大學薪資成長,decreasing = T),],10)
 ```
 
 ### 提高超過5%的的職業有哪些? 
 ```{r over5}
 #這是R Code Chunk
+
+wage_add_over5<-filter(wage_table,wage_table$大學薪資成長>1.05)
 ```
 
 ### 主要的職業種別是哪些種類呢?
