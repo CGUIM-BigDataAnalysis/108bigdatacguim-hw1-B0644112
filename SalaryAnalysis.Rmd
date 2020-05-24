@@ -63,6 +63,7 @@ wage_add_over5<-filter(wage_table,wage_table$大學薪資成長>1.05)
 ### 主要的職業種別是哪些種類呢?
 ```{r mainType}
 #這是R Code Chunk
+str(strsplit(wage_table$大職業別,"-"))
 ```
 
 ## 男女同工不同酬現況分析
