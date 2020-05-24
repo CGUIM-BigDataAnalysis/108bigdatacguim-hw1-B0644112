@@ -14,8 +14,7 @@ library(readr)
 wage104_url<-read_csv("http://ipgod.nchc.org.tw/dataset/b6f36b72-0c4a-4b60-9254-1904e180ddb1/resource/98d5094d-7481-44b5-876a-715a496f922c/download/a17000000j-020066-mah.csv")
 wage107_url<-read_csv("C:/Users/m0470/OneDrive/桌面/107wages.csv")
 library(dplyr)
-wage104_url$大職業別<-gsub("-|"," ",wage105_url$大職業別)
-wage107_url$大職業別<-gsub("-"," ",wage107_url$大職業別)
+
 ```
 
 ### 107年度薪資較104年度薪資高的職業有哪些? 
