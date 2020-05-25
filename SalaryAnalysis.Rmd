@@ -15,6 +15,11 @@ wage104_url<-read_csv("http://ipgod.nchc.org.tw/dataset/b6f36b72-0c4a-4b60-9254-
 wage107_url<-read_csv("C:/Users/m0470/OneDrive/桌面/107wages.csv")
 library(dplyr)
 
+#將104,107年的職業名稱統一
+wage104_url$大職業別<-gsub("、|_",",",wage104_url$大職業別)
+wage107_url$大職業別<-gsub("、|_",",",wage107_url$大職業別)
+wage104_url$大職業別<-gsub("部門","",wage107_url$大職業別)
+
 #Join 104和107年度表格
 wage_table<-left_join(wage104_url,wage107_url,by="大職業別")
 
@@ -52,7 +57,8 @@ wage_table$大學薪資成長<-wage_table$`大學-薪資.y`/wage_table$`大學-�
 wage_107over104<-filter(wage_table,wage_table$大學薪資成長>1)
 head(wage_107over104[order(wage_107over104$大學薪資成長,decreasing = T),],10)
 ```
-104到107年度大學畢業者薪資提高比例的前十名，包含3個不動產業，3個住宿及餐飲業，1個用水供應及污染整治業，1個運輸及倉儲業，2個金融及保險業。其中不動產業-技術員及助理專業人員薪資漲幅最高。
+104到107年度大學畢業者薪資提高比例的前十名，包含1個專業,科學及技術服務業，4個教育業，1個不動產業，1個住宿及餐飲業，1個金融及保險業，1個藝術,娛樂及休閒服務業，1個用水供應及污染整治業。其中專業,科學及技術服務業-服務及銷售工作人員薪資漲幅最高,教育業薪資提高比例高的職業最多。
+
 ### 提高超過5%的的職業有哪些? 
 ```{r over5}
 #這是R Code Chunk
