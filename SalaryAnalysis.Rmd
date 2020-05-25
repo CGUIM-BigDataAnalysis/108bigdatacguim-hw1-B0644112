@@ -49,26 +49,30 @@ wage_table$`研究所-薪資`<-as.numeric(wage_table$`研究所-薪資`)
 ### 107年度薪資較104年度薪資高的職業有哪些? 
 ```{r compare103106}
 #這是R Code Chunk
-
-#計算107,104薪資提高比率並新增到欄位'大學薪資成長'
-wage_table$大學薪資成長<-wage_table$`大學-薪資.y`/wage_table$`大學-薪資.x`
-
 #107年度薪資較104年度薪資高的職業取前十名
-wage_107over104<-filter(wage_table,wage_table$大學薪資成長>1)
-head(wage_107over104[order(wage_107over104$大學薪資成長,decreasing = T),],10)
+
+wage_107over104<-wage_table %>%
+                select(大職業別,大學薪資成長) %>%
+                filter(大學薪資成長>1) %>%
+                arrange(desc(大學薪資成長))%>%
+                head(10)
 ```
+
 104到107年度大學畢業者薪資提高比例的前十名，包含1個專業,科學及技術服務業，4個教育業，1個不動產業，1個住宿及餐飲業，1個金融及保險業，1個藝術,娛樂及休閒服務業，1個用水供應及污染整治業。其中專業,科學及技術服務業-服務及銷售工作人員薪資漲幅最高,教育業薪資提高比例高的職業最多。
 
 ### 提高超過5%的的職業有哪些? 
 ```{r over5}
 #這是R Code Chunk
 
-wage_add_over5<-filter(wage_table,wage_table$大學薪資成長>1.05)
+wage_add_over5<-wage_table %>%
+                select(大職業別,大學薪資成長) %>%
+                filter(大學薪資成長>1.05) 
+
 ```
 ### 主要的職業種別是哪些種類呢?
 ```{r mainType}
 #這是R Code Chunk
-str(strsplit(wage_table$大職業別,"-"))
+job_type<-strsplit(wage_add_over5$大職業別,"-")
 ```
 104到107年度大學畢業者薪資提高比例超過5%的主要職業種類分別是運輸及倉儲業、金融及保險業、不動產業
 ## 男女同工不同酬現況分析
@@ -78,28 +82,37 @@ str(strsplit(wage_table$大職業別,"-"))
 ### 104和107年度的大學畢業薪資資料，哪些行業男生薪資比女生薪資多?
 ```{r male}
 #這是R Code Chunk
-#將104,107年大學-女/男的資料存到wage_table_gender
-wage_table_gender<-wage_table[,c(1,2,12,15,25)]
 
 #取104男生薪資比女生薪資多的職業前十名
-manwage_104<-filter(wage_table_gender,wage_table_gender$`大學-女/男.x`<100)
-head(manwage_104[order(manwage_104$`大學-女/男.x`,decreasing = T),],10)
-
+manwage_104<-wage_table %>%
+             select(年度.x,大職業別,`大學-女/男.x`)%>%
+             filter(`大學-女/男.x`<100)%>%
+             arrange(desc(`大學-女/男.x`))%>%
+             head(10)
 
 #取107男生薪資比女生薪資多的職業前十名
-manwage_107<-filter(wage_table_gender,wage_table_gender$`大學-女/男.y`<100)
-head(manwage_107[order(manwage_107$`大學-女/男.y`,decreasing = T),],10)
+manwage_107<-wage_table %>%
+             select(年度.y,大職業別,`大學-女/男.y`)%>%
+             filter(`大學-女/男.y`<100)%>%
+             arrange(desc(`大學-女/男.y`))%>%
+             head(10)
 ```
 ### 哪些行業女生薪資比男生薪資多? 
 ```{r female}
 #這是R Code Chunk
 #取104年女生金資比男生多的職業前十名
-womanwage_104<-filter(wage_table_gender,wage_table_gender$`大學-女/男.x`>=100)
-head(womanwage_104[order(womanwage_104$`大學-女/男.x`,decreasing = T),],10)
+womanwage_104<-wage_table %>%
+               select(年度.x,大職業別,`大學-女/男.x`)%>%
+               filter(`大學-女/男.x`>100)%>%
+               arrange(desc(`大學-女/男.x`))%>%
+               head(10)
 
 #取107年女生金資比男生多的職業前十名
-womanwage_107<-filter(wage_table_gender,wage_table_gender$`大學-女/男.y`>=100)
-head(womanwage_107[order(womanwage_107$`大學-女/男.y`,decreasing = T),],10)
+womanwage_107<-wage_table %>%
+               select(年度.y,大職業別,`大學-女/男.y`)%>%
+               filter(`大學-女/男.y`>100)%>%
+               arrange(desc(`大學-女/男.y`))%>%
+               head(10)
 
 ```
 
