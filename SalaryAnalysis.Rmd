@@ -21,7 +21,7 @@ wage107_url$大職業別<-gsub("、|_",",",wage107_url$大職業別)
 wage104_url$大職業別<-gsub("部門","",wage107_url$大職業別)
 
 #Join 104和107年度表格
-wage_table<-left_join(wage104_url,wage107_url,by="大職業別")
+wage_table<-full_join(wage104_url,wage107_url,by="大職業別")
 
 #將104,107年大學-薪資轉成numeric
 wage_table$`大學-薪資.x`<-gsub("—|…"," ",wage_table$`大學-薪資.x`)
@@ -49,6 +49,10 @@ wage_table$`研究所-薪資`<-as.numeric(wage_table$`研究所-薪資`)
 ### 107年度薪資較104年度薪資高的職業有哪些? 
 ```{r compare103106}
 #這是R Code Chunk
+
+#計算107,104薪資提高比率並新增到欄位'大學薪資成長'
+wage_table$大學薪資成長<-wage_table$`大學-薪資.y`/wage_table$`大學-薪資.x`
+
 #107年度薪資較104年度薪資高的職業取前十名
 
 wage_107over104<-wage_table %>%
@@ -56,6 +60,7 @@ wage_107over104<-wage_table %>%
                 filter(大學薪資成長>1) %>%
                 arrange(desc(大學薪資成長))%>%
                 head(10)
+
 ```
 
 104到107年度大學畢業者薪資提高比例的前十名，包含1個專業,科學及技術服務業，4個教育業，1個不動產業，1個住宿及餐飲業，1個金融及保險業，1個藝術,娛樂及休閒服務業，1個用水供應及污染整治業。其中專業,科學及技術服務業-服務及銷售工作人員薪資漲幅最高,教育業薪資提高比例高的職業最多。
