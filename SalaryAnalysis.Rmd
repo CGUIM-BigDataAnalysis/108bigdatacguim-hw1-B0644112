@@ -84,7 +84,11 @@ wage_add_over5<-wage_table %>%
 ### 主要的職業種別是哪些種類呢?
 ```{r mainType}
 #這是R Code Chunk
-job_type<-strsplit(wage_add_over5$大職業別,"-")
+library(magrittr)
+wage_add_over5$job_type<-
+              strsplit(wage_add_over5$大職業別,"-")%>%
+              sapply("[",1)
+table(job_type)
 ```
 104到107年度大學畢業者薪資提高比例超過5%的主要職業種類分別是運輸及倉儲業、	出版,影音製作,傳播及資通訊服務業、
 金融及保險業、不動產業、藝術,娛樂及休閒服務業
